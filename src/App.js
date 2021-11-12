@@ -7,7 +7,19 @@ const BASE_URL = 'http://api.exchangeratesapi.io/v1/latest?access_key=f798e5b880
 function App() {
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [fromCurrency, setFromCurrency] = useState();
+  const [exchangeRate, setExchangeRate] = useState();
   const [toCurrency, setToCurrency] = useState();
+  const [amount, setAmount] = useState(1);
+  const [amountInFromCurr, setAmountInFromCurr] = useState(true);
+
+  let toAmount, fromAmount;
+  if (amountInFromCurr) {
+    fromAmount = amount;
+    toAmount = amount * exchangeRate;
+  } else {
+    toAmount = amount;
+    fromAmount = amount / exchangeRate;
+  }
 
   useEffect(() => {
     fetch(BASE_URL)
@@ -16,7 +28,8 @@ function App() {
         const firstCurrency = Object.keys(data.rates)[0];
         setCurrencyOptions([data.base, ...Object.keys(data.rates)]);
         setFromCurrency(data.base);
-        setToCurrency(firstCurrency)
+        setToCurrency(firstCurrency);
+        setExchangeRate(data.rates[firstCurrency]);
       });
   }, []);
 
@@ -27,13 +40,15 @@ function App() {
         currencyOptions={currencyOptions} 
         selectedCurrency={fromCurrency}
         onChangeCurrency={e => setFromCurrency(e.target.value)}
-      />
+        amount={fromAmount}
+        />
       <div className="equals">=</div>
       <CurrencyRow 
         currencyOptions={currencyOptions} 
         selectedCurrency={toCurrency}
         onChangeCurrency={e => setToCurrency(e.target.value)}
-      />
+        amount={toAmount}
+        />
     </>
   );
 }
