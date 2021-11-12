@@ -23,9 +23,17 @@ function App() {
   return (
     <>
       <h1>Convert</h1>
-      <CurrencyRow currencyOptions={currencyOptions} />
+      <CurrencyRow 
+        currencyOptions={currencyOptions} 
+        selectedCurrency={fromCurrency}
+        onChangeCurrency={e => setFromCurrency(e.target.value)}
+      />
       <div className="equals">=</div>
-      <CurrencyRow currencyOptions={currencyOptions} />
+      <CurrencyRow 
+        currencyOptions={currencyOptions} 
+        selectedCurrency={toCurrency}
+        onChangeCurrency={e => setToCurrency(e.target.value)}
+      />
     </>
   );
 }
